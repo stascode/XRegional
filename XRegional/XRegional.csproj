@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DD56D8B3-336E-493D-BED7-C720EAC92B3D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>XRegional</RootNamespace>
+    <AssemblyName>XRegional</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Azure.Documents.Client">
+      <HintPath>..\packages\Microsoft.Azure.Documents.Client.0.9.1-preview\lib\net40\Microsoft.Azure.Documents.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Data.Edm, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Data.Edm.5.6.2\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Data.OData.5.6.2\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Data.Services.Client.5.6.2\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling">
+      <HintPath>..\packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=1.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.1.8.0.0\lib\net35-full\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=4.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WindowsAzure.Storage.4.3.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Spatial, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.Spatial.5.6.2\lib\net40\System.Spatial.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Docdb\ITargetCollectionResolver.cs" />
+    <Compile Include="Docdb\XCollectionBase.cs" />
+    <Compile Include="Docdb\DocdbGatewayMessage.cs" />
+    <Compile Include="GatewayMultiQueueWriter.cs" />
+    <Compile Include="Docdb\DocdbGatewayQueueProcessor.cs" />
+    <Compile Include="GatewayBlobStore.cs" />
+    <Compile Include="IGatewayMessage.cs" />
+    <Compile Include="IGatewayWriter.cs" />
+    <Compile Include="Table\Internal\ListExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Table\ITargetTableResolver.cs" />
+    <Compile Include="Common\Guard.cs" />
+    <Compile Include="Docdb\Internal\DocdbETagViolationStrategy.cs" />
+    <Compile Include="Docdb\Internal\DocumentExtensions.cs" />
+    <Compile Include="Table\Internal\TableETagViolationStrategy.cs" />
+    <Compile Include="GatewayPacket.cs" />
+    <Compile Include="Docdb\VersionedDocument.cs" />
+    <Compile Include="Internal\VersionIncrementer.cs" />
+    <Compile Include="Serializers\JsonExt\CustomContractResolver.cs" />
+    <Compile Include="Serializers\JsonExt\DocumentConverter.cs" />
+    <Compile Include="Serializers\JsonExt\EntityPropertyConverter.cs" />
+    <Compile Include="Docdb\SourceCollection.cs" />
+    <Compile Include="Docdb\TargetCollection.cs" />
+    <Compile Include="Docdb\XCollectionResult.cs" />
+    <Compile Include="Table\SourceTable .cs" />
+    <Compile Include="Table\TargetTable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Table\XTableBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Table\XTableResult.cs" />
+    <Compile Include="IGatewayBlobStore.cs" />
+    <Compile Include="Wrappers\BlobContainerExtensions.cs" />
+    <Compile Include="Wrappers\BlobContainerWrapper.cs" />
+    <Compile Include="GatewayQueueWriter.cs" />
+    <Compile Include="Table\TableGatewayQueueProcessor.cs" />
+    <Compile Include="GatewayQueueReader.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serializers\JsonCustomConvert.cs" />
+    <Compile Include="Serializers\ZipCompressor.cs" />
+    <Compile Include="Table\VersionedTableEntity.cs" />
+    <Compile Include="VersionOverflowException.cs" />
+    <Compile Include="Wrappers\QueueWrapper.cs" />
+    <Compile Include="Wrappers\TableConvert.cs" />
+    <Compile Include="Table\TableGatewayMessage.cs" />
+    <Compile Include="Wrappers\TableWrapper.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
