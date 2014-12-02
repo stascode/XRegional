@@ -10,4 +10,6 @@ XRegional introduces a simple concept of *Gateway* that is used in the primary r
 
 To go and start executing writes to either an Azure Table or a Document Db collection, use SourceTable or SourceCollection respectively. Both implement a “brutal” writer approach. Their counterparts: TargetTable and TargetCollection implement the write operation following the optimistic concurrenty and ETag rules in the secondary region.
 
+## How to get started
+
 Follow instructions in XRegional.Tests/Readme.txt to run the tests.
