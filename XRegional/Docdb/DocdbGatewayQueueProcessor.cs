@@ -36,19 +36,32 @@ namespace XRegional.Docdb
         /// Processes next message from the queue.
         /// </summary>
         /// <returns>False if queue is empty, otherwise - True.</returns>
-        public bool ProcessNext()
+        public bool ProcessNext(out bool discarded)
         {
-            return _queueReader.ReadNextMessage<DocdbGatewayMessage>(DispatchMessage, OnError);
+            bool d = false;
+            bool result = _queueReader.ReadNextMessage<DocdbGatewayMessage>(
+                m => { d = DispatchMessage(m); }, 
+                OnError
+                );
+
+            discarded = d;
+            return result;
         }
 
-        private void OnError(Exception exception, DocdbGatewayMessage message, CloudQueueMessage cloudMessage)
+        public bool ProcessNext()
+        {
+            bool discarded;
+            return ProcessNext(out discarded);
+        }
+
+        protected virtual void OnError(Exception exception, DocdbGatewayMessage message, CloudQueueMessage cloudMessage)
         {
             // TODO you can extend it to save the poisonous message
 
             FaildedMessagesCount++;
         }
 
-        private void DispatchMessage(DocdbGatewayMessage message)
+        protected virtual bool DispatchMessage(DocdbGatewayMessage message)
         {
             Guard.NotNull(message, "message");
             Guard.NotNullOrEmpty(message.Key, "message.Key");
@@ -61,11 +74,13 @@ namespace XRegional.Docdb
             if (!_cachedTargetCollections.ContainsKey(key))
                 _cachedTargetCollections[key] = _targetCollectionResolver.Resolve(key);
 
-            // TODO currently we do not support inserting more than one document
-            // TODO or: we may introduce a simple for-loop here
-            _cachedTargetCollections[key].Write(message.Documents[0]);
+            // TODO inserting multiple documents is not supported currently
+            // TODO or: a simple for-loop may be introduced here
+            XCollectionResult result = _cachedTargetCollections[key].Write(message.Documents[0]);
 
             ProcessedMessagesCount++;
+
+            return result.Discarded;
         }
     }
 }

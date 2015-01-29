@@ -47,6 +47,9 @@ namespace XRegional.Docdb
 
                 if (existingDocument == null)
                 {
+                    // Initialize the Version field
+                    document.InitVersion();
+
                     // document does not exist
                     onPreExecuteWrite();
 

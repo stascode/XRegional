@@ -45,6 +45,7 @@ namespace XRegional.Tests.TestSuites.DocDb
             get { return GetValue<double>("SurfaceTemperature"); }
             set { SetValue("SurfaceTemperature", value); }
         }
+
         public long Version
         {
             get { return GetValue<long>("Version"); }

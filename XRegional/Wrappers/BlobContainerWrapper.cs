@@ -14,8 +14,23 @@ namespace XRegional.Wrappers
     {
         private readonly CloudBlobContainer _blobContainer;
 
+        private static readonly IRetryPolicy DefaultRetryPolicy = new LinearRetry(TimeSpan.FromSeconds(1), 5);
+
+        public static BlobContainerWrapper FromConnectionString(string containerName, string storageAccountConnectionString)
+        {
+            return FromConnectionString(containerName, storageAccountConnectionString, DefaultRetryPolicy);
+        }
+
+        public static BlobContainerWrapper FromConnectionString(string containerName, string storageAccountConnectionString, IRetryPolicy defaultPolicy)
+        {
+            Guard.NotNullOrEmpty(containerName, "containerName");
+            Guard.NotNullOrEmpty(storageAccountConnectionString, "storageAccountConnectionString");
+
+            return new BlobContainerWrapper(containerName, CloudStorageAccount.Parse(storageAccountConnectionString), defaultPolicy);
+        }
+
         public BlobContainerWrapper(string containerName, CloudStorageAccount storageAccount)
-            : this(containerName, storageAccount, new LinearRetry(TimeSpan.FromSeconds(1), 5))
+            : this (containerName, storageAccount, DefaultRetryPolicy)
         {
         }
 
@@ -25,8 +40,9 @@ namespace XRegional.Wrappers
             Guard.NotNull(storageAccount, "storageAccount");
 
             CloudBlobClient blobClient = new CloudBlobClient(storageAccount.BlobEndpoint, storageAccount.Credentials);
-            if (defaultPolicy != null)
-                blobClient.DefaultRequestOptions.RetryPolicy = defaultPolicy;
+            if (defaultPolicy == null)
+                defaultPolicy = DefaultRetryPolicy;
+            blobClient.DefaultRequestOptions.RetryPolicy = defaultPolicy;
 
             CloudBlobContainer blobContainer = blobClient.GetContainerReference(containerName);
             blobContainer.CreateSurely();

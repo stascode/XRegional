@@ -15,14 +15,28 @@ namespace XRegional.Wrappers
     {
         private readonly CloudQueue _queue;
 
+        private static readonly IRetryPolicy DefaultRetryPolicy = new LinearRetry(TimeSpan.FromSeconds(1), 5);
+
         public string QueueName
         {
             get { return _queue.Name; }
         }
 
+        public static QueueWrapper FromConnectionString(string queueName, string storageAccountConnectionString)
+        {
+            return FromConnectionString(queueName, storageAccountConnectionString, DefaultRetryPolicy);
+        }
+
+        public static QueueWrapper FromConnectionString(string queueName, string storageAccountConnectionString, IRetryPolicy defaultRetry)
+        {
+            Guard.NotNullOrEmpty(queueName, "queueName");
+            Guard.NotNullOrEmpty(storageAccountConnectionString, "storageAccountConnectionString");
+
+            return new QueueWrapper(queueName, CloudStorageAccount.Parse(storageAccountConnectionString), defaultRetry);
+        }
 
         public QueueWrapper(string queueName, CloudStorageAccount storageAccount)
-            : this(queueName, storageAccount, new LinearRetry(TimeSpan.FromSeconds(1), 5))
+            : this(queueName, storageAccount, DefaultRetryPolicy)
         {
         }
 
@@ -32,8 +46,9 @@ namespace XRegional.Wrappers
             Guard.NotNull(storageAccount, "storageAccount");
 
             CloudQueueClient queueClient = new CloudQueueClient(storageAccount.QueueEndpoint, storageAccount.Credentials);
-            if (defaultRetry != null)
-                queueClient.DefaultRequestOptions.RetryPolicy = defaultRetry;
+            if (defaultRetry == null)
+                defaultRetry = DefaultRetryPolicy;
+            queueClient.DefaultRequestOptions.RetryPolicy = defaultRetry;
 
             // ensure that the queue is created
             CloudQueue queue = queueClient.GetQueueReference(queueName);
